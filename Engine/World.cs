@@ -179,11 +179,105 @@ namespace Engine
             Location cliffs = new Location(LOCATION_ID_CLIFFS, "Cliffs",
                 "Rocky path hidden in shadows. You feel strong winds and hear ominous noises");
 
-            Location wolvesden = new Location(LOCATION_ID_WOLVES_DEN, "Wolves' den",
+            Location wolvesden = new Location(LOCATION_ID_WOLVES_DEN, "Dark cave",
                 "Large dark cave entrance. Howling is heard within.");
             wolvesden.MonsterLivingHere = MonsterByID(MONSTER_ID_WOLF);
 
             //link locations together
+
+            home.LocationToNorth = townSquare;
+
+            townSquare.LocationToNorth = alchemistHut;
+            townSquare.LocationToSouth = home;
+            townSquare.LocationToEast = guardPost;
+            townSquare.LocationToWest = farmhouse;
+
+            farmhouse.LocationToEast = townSquare;
+            farmhouse.LocationToWest = farmersField;
+
+            farmersField.LocationToEast = farmhouse;
+
+            alchemistHut.LocationToSouth = townSquare;
+            alchemistHut.LocationToNorth = alchemistsGarden;
+
+            alchemistsGarden.LocationToSouth = alchemistHut;
+
+            guardPost.LocationToEast = bridge;
+            guardPost.LocationToWest = townSquare;
+
+            bridge.LocationToWest = guardPost;
+            bridge.LocationToEast = spiderField;
+            bridge.LocationToNorth = cliffs;
+
+            spiderField.LocationToWest = bridge;
+            spiderField.LocationToNorth = cliffs;
+
+            cliffs.LocationToSouth = bridge;
+            cliffs.LocationToNorth = wolvesden;
+
+            wolvesden.LocationToSouth = cliffs;
+
+            //add locations to static list
+
+            Locations.Add(home);
+            Locations.Add(townSquare);
+            Locations.Add(guardPost);
+            Locations.Add(alchemistHut);
+            Locations.Add(alchemistsGarden);
+            Locations.Add(farmhouse);
+            Locations.Add(farmersField);
+            Locations.Add(bridge);
+            Locations.Add(spiderField);
+            Locations.Add(cliffs);
+            Locations.Add(wolvesden);
+        }
+
+        public static Item ItemByID(int id)
+        {
+            foreach(Item item in Items)
+            {
+                if(item.ID == id)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public static Monster MonsterByID(int id)
+        {
+            foreach(Monster monster in Monsters)
+            {
+                if(monster.ID == id)
+                {
+                    return monster;
+                }
+            }
+            return null;
+        }
+
+        public static Quest QuestByID(int id)
+        {
+            foreach(Quest quest in Quests)
+            {
+                if(quest.ID == id)
+                {
+                    return quest;
+                }
+            }
+            return null;
+        }
+
+        public static Location LocationByID(int id)
+        {
+            foreach(Location location in Locations)
+            {
+                if(location.ID == id)
+                {
+                    return location;
+                }
+            }
+            return null;
         }
     }
 }
