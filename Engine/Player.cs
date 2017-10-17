@@ -79,48 +79,45 @@ namespace Engine
         {
             foreach(QuestCompletionItem qci in quest.QuestCompletionItems)
             {
-                foreach(InventoryItem ii in Inventory)
+                InventoryItem item = Inventory.SingleOrDefault(ii =>
+                    ii.Details.ID == qci.Details.ID);
+
+                if(item != null)
                 {
-                    if(ii.Details.ID == qci.Details.ID)
-                    {
-                        //subtract quantity from player's inv needed to complete quest
-                        ii.Quantity -= qci.Quantity;
-                        break;
-                    }
+                    //subtract quantity from player inv needed for quest
+                    item.Quantity -= qci.Quantity;
                 }
             }
         }
 
         public void AddItemToInventory(Item itemToAdd)
         {
-            foreach(InventoryItem ii in Inventory)
-            {
-                if(ii.Details.ID == itemToAdd.ID)
-                {
-                    //they have item in inv, increase quantity by 1
-                    ii.Quantity++;
+            InventoryItem item = Inventory.SingleOrDefault(
+                ii => ii.Details.ID == itemToAdd.ID);
 
-                    return; //added item and finished, function complete
-                }
+            if (item == null)
+            {
+                //they didn't have the item, so add to their inventory, quantity: 1
+                Inventory.Add(new InventoryItem(itemToAdd, 1));
             }
-            //they didn't have the item, so add to their inventory, quantity: 1
-            Inventory.Add(new InventoryItem(itemToAdd, 1));
+            else
+            {
+                //they have item in inventory, increase by one
+                item.Quantity++;
+            }
         }
 
         public void MarkQuestCompleted(Quest quest)
         {
             //find the quest in the player's quest list
-            foreach(PlayerQuest pq in Quests)
-            {
-                if(pq.Details.ID == quest.ID)
-                {
-                    //completed
-                    pq.IsCompleted = true;
+            PlayerQuest playerQuest = Quests.SingleOrDefault(
+                pq => pq.Details.ID == quest.ID);
 
-                    //found the quest, marked complete, getting out of function
-                    return;
-                }
+            if(playerQuest != null)
+            {
+                playerQuest.IsCompleted = true;
             }
+            
         }
     }
 }
